@@ -8,6 +8,8 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,11 +29,13 @@ public class CourseController
             response = Course.class),
             @ApiResponse(code = 404, message = "Class list was not found")})
     @GetMapping(value = "/courses", produces = {"application/json"})
-    public ResponseEntity<?> listAllCourses()
+    public ResponseEntity<?> listAllCoursesByPage(@PageableDefault(page = 0, size = 3)Pageable pageable)
     {
-        ArrayList<Course> myCourses = courseService.findAll();
+        ArrayList<Course> myCourses = courseService.findAllPageable(pageable);
         return new ResponseEntity<>(myCourses, HttpStatus.OK);
     }
+
+
 
     @ApiOperation(value = "List the number of students per class", response = Course.class)
     @ApiResponses(value = {@ApiResponse(code = 200,

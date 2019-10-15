@@ -7,6 +7,8 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,8 +35,8 @@ public class StudentController {
             response = Student.class),
             @ApiResponse(code = 404, message = "Student not found")})
     @GetMapping(value = "/students", produces = {"application/json"})
-    public ResponseEntity<?> listAllStudents() {
-        List<Student> myStudents = studentService.findAll();
+    public ResponseEntity<?> listAllStudentsPageable(@PageableDefault(page=0, size=3)Pageable pageable) {
+        List<Student> myStudents = studentService.findAllPageable(pageable);
         return new ResponseEntity<>(myStudents, HttpStatus.OK);
     }
 
